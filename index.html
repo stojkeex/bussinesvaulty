@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+    <title>Vaulty AI - Finance Tools</title>
+    <link rel="icon" type="image/png" href="/logovaultyai.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            overscroll-behavior-y: contain;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+        .h-dynamic-screen {
+            height: 100vh; /* Fallback */
+            height: var(--app-height);
+        }
+        
+        /* Animated Gradient Background */
+        .animated-gradient-bg {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            background-size: 200% auto;
+            animation: gradient-flow 8s ease-in-out infinite;
+        }
+        
+        /* Gradient Text Style */
+        .gradient-text {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: gradient-flow 8s ease-in-out infinite;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            background-size: 200% auto;
+            animation: gradient-flow 8s ease-in-out infinite;
+        }
+        .btn-primary:hover {
+            box-shadow: 0 0 8px rgba(0, 251, 255, 0.7);
+            filter: brightness(1.1);
+        }
+        .btn-primary:disabled {
+            filter: grayscale(80%);
+            cursor: not-allowed;
+        }
+        .input-gradient-border {
+            padding: 1px;
+            background: #333;
+            transition: background 0.3s ease;
+        }
+        .input-gradient-border:focus-within {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            animation: gradient-flow 8s ease-in-out infinite;
+            background-size: 200% auto;
+        }
+        .input-field {
+            background-color: #1a1a1a;
+            border: none;
+            color: #fff;
+            width: 100%;
+            outline: none;
+        }
+        .input-field:focus {
+            background-color: #0f0f0f;
+            outline: none;
+        }
+        select.input-field {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.5rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        @keyframes gradient-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Custom scrollbar base styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #00fbff, #002afa, #ff00d4);
+            border-radius: 4px;
+        }
+        
+        .btn-plan-active {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            color: #ffffff;
+            background-size: 200% auto;
+            animation: gradient-flow 8s ease-in-out infinite;
+        }
+        
+        /* Styles for suggestion cards */
+        .suggestion-card, .tool-card {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            text-align: left;
+        }
+        .suggestion-card:hover, .tool-card:hover {
+            background-color: #2a2a2a;
+            transform: translateY(-4px);
+        }
+        
+        /* Mobile Navigation Styles */
+        .mobile-nav-btn.active span, .desktop-nav-btn.active p {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            background-size: 200% auto;
+            animation: gradient-flow 8s ease-in-out infinite;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        
+        /* Notification Styles */
+        #notification-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .notification {
+            background-color: #1f1f23;
+            color: #ffffff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-top: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+
+        /* AI Output Styling */
+        .ai-output-container {
+            background-color: #0a0a0a;
+            border: 1px solid #333;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            white-space: pre-wrap; /* Preserve line breaks and spaces */
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            line-height: 1.6;
+        }
+         .ai-output-container h1, .ai-output-container h2, .ai-output-container h3 {
+            font-weight: bold;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .ai-output-container h1 { font-size: 1.5em; }
+        .ai-output-container h2 { font-size: 1.25em; }
+        .ai-output-container h3 { font-size: 1.1em; }
+        .ai-output-container strong { font-weight: bold; }
+        .ai-output-container em { font-style: italic; }
+        .ai-output-container ul { list-style-type: disc; margin-left: 1.5rem; }
+        .ai-output-container ol { list-style-type: decimal; margin-left: 1.5rem; }
+        .ai-output-container li { margin-bottom: 0.25rem; }
+        .ai-output-container pre { background-color: #1a1a1a; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+        .ai-output-container code { font-family: monospace; }
+        .blinking-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: #00fbff;
+            animation: blink-cursor 1s step-end infinite;
+        }
+        .blinking-cursor-large {
+            display: inline-block;
+            width: 12px;
+            height: 1.2em;
+            background-color: #00fbff;
+            animation: blink-cursor 1s step-end infinite;
+            margin-left: 8px;
+        }
+        @keyframes blink-cursor { from, to { background-color: transparent } 50% { background-color: #00fbff; } }
+
+        /* Chat bubble styles */
+        .message-bubble {
+            padding: 0.75rem 1rem;
+            border-radius: 1.25rem;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .user-message .message-bubble {
+            background: linear-gradient(90deg, rgba(0, 251, 255, 1) 0%, rgba(0, 42, 250, 1) 50%, rgba(255, 0, 212, 1) 100%);
+            color: white;
+            border-bottom-right-radius: 0.25rem;
+            animation: gradient-flow 8s ease-in-out infinite;
+            background-size: 200% auto;
+        }
+        .ai-message .message-bubble {
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            border-bottom-left-radius: 0.25rem;
+        }
+        .message-bubble strong { font-weight: bold; }
+        .message-bubble em { font-style: italic; }
+        .message-bubble ul { list-style-type: disc; margin-left: 1.5rem; }
+        .message-bubble ol { list-style-type: decimal; margin-left: 1.5rem; }
+    </style>
+</head>
+<body class="h-dynamic-screen">
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" style="stop-color:rgba(0, 251, 255, 1);" />
+          <stop offset="50%" style="stop-color:rgba(0, 42, 250, 1);" />
+          <stop offset="100%" style="stop-color:rgba(255, 0, 212, 1);" />
+        </linearGradient>
+      </defs>
+    </svg>
+
+    <!-- App Container -->
+    <div id="app-container" class="h-full relative">
+        <!-- Main App Screen (initially hidden, shown after login) -->
+        <div id="main-app" class="hidden h-full w-full flex relative">
+            
+            <!-- Left Panel: Navigation (Desktop Only) -->
+            <div id="sidebar-panel" class="hidden w-full md:w-1/4 h-full bg-[#0a0a0a] border-r border-[#1D85E1] flex-col p-4 md:flex transition-all duration-300 ease-in-out">
+                <div class="flex justify-between items-center mb-4">
+                    <div class="flex items-center gap-3">
+                        <img src="/logovaultyai.png" class="w-8 h-8" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0a0a0a/FFFFFF?text=V';">
+                        <h2 class="text-2xl font-bold gradient-text">Vaulty AI</h2>
+                    </div>
+                    <button id="hide-sidebar-btn" class="p-2 rounded-full hover:bg-[#1a1a1a]"><i data-lucide="panel-left-close" class="w-5 h-5"></i></button>
+                </div>
+
+                <!-- Vaulty Assistant Button -->
+                 <div class="my-2 border-t border-[#1D85E1]/50"></div>
+                 <button data-page="vaulty" id="vaulty-chatbot-btn" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-[#1a1a1a] border border-transparent w-full">
+                    <img src="/logovaultyai.png" class="w-12 h-12 rounded-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/48x48/000000/FFFFFF?text=V';">
+                    <div class="flex-grow text-left">
+                        <p class="font-semibold">Vaulty Assistant</p>
+                        <p class="text-sm text-gray-400 truncate">Your AI Assistant</p>
+                    </div>
+                </button>
+                <div class="my-2 border-t border-[#1D85E1]/50"></div>
+
+                <!-- Desktop Sidebar Navigation -->
+                <nav id="desktop-nav" class="flex-grow space-y-2">
+                    <button data-page="dashboard" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="layout-dashboard" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Dashboard</p>
+                    </button>
+                    <button data-page="budget" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="piggy-bank" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Budget Planner</p>
+                    </button>
+                    <button data-page="goals" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="target" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Goal Setter</p>
+                    </button>
+                    <button data-page="business" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="briefcase" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Business Builder</p>
+                    </button>
+                    <button data-page="manager" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="user-cog" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Financial Manager</p>
+                    </button>
+                    <button data-page="learn" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="book-open" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Learning Hub</p>
+                    </button>
+                </nav>
+                
+                <div class="mt-auto space-y-2 pt-2 border-t border-[#1D85E1]/50">
+                    <button data-page="premium" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="star" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Get Premium</p>
+                    </button>
+                    <button data-page="settings" class="desktop-nav-btn flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a1a1a] w-full text-left">
+                        <i data-lucide="settings" class="w-5 h-5 text-[#1D85E1]"></i>
+                        <p class="font-semibold">Settings</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right Panel: Main Content Area -->
+            <div id="main-content" class="w-full md:w-3/4 h-full flex-col bg-black flex overflow-y-auto relative">
+
+                <!-- Page Header (for mobile) -->
+                <div id="page-header" class="md:hidden p-4 border-b border-[#1D85E1] flex items-center gap-3">
+                     <img src="/logovaultyai.png" class="w-8 h-8" onerror="this.onerror=null;this.src='https://placehold.co/32x32/0a0a0a/FFFFFF?text=V';">
+                     <h1 id="page-title" class="text-2xl font-bold gradient-text">Dashboard</h1>
+                </div>
+
+                <button id="show-sidebar-btn" class="hidden absolute top-4 left-4 z-10 p-2 rounded-full hover:bg-[#1a1a1a]"><i data-lucide="panel-left-open" class="w-5 h-5"></i></button>
+                
+                <div id="page-container" class="p-4 md:p-8 flex-grow">
+                    <!-- Dashboard Page -->
+                    <div id="dashboard-page" class="page-content">
+                        <h2 class="text-3xl md:text-4xl font-bold mb-2">Welcome Back!</h2>
+                        <p class="text-gray-400 mb-8">What would you like to do today?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div data-page="budget" class="tool-card">
+                                <i data-lucide="piggy-bank" class="w-8 h-8 mb-4 text-[#1D85E1]"></i>
+                                <h3 class="text-xl font-bold mb-2">Budget Planner</h3>
+                                <p class="text-gray-400">Create a personalized budget with AI to manage your income and expenses.</p>
+                            </div>
+                            <div data-page="goals" class="tool-card">
+                                <i data-lucide="target" class="w-8 h-8 mb-4 text-[#1D85E1]"></i>
+                                <h3 class="text-xl font-bold mb-2">Goal Setter</h3>
+                                <p class="text-gray-400">Define your financial goals and get a step-by-step plan to achieve them.</p>
+                            </div>
+                             <div data-page="business" class="tool-card">
+                                <i data-lucide="briefcase" class="w-8 h-8 mb-4 text-[#1D85E1]"></i>
+                                <h3 class="text-xl font-bold mb-2">Business Builder</h3>
+                                <p class="text-gray-400">Let AI guide you step-by-step in creating a solid business plan.</p>
+                            </div>
+                            <div data-page="manager" class="tool-card">
+                                <i data-lucide="user-cog" class="w-8 h-8 mb-4 text-[#1D85E1]"></i>
+                                <h3 class="text-xl font-bold mb-2">Financial Manager</h3>
+                                <p class="text-gray-400">Create a personalized AI manager to guide your financial journey.</p>
+                            </div>
+                            <div data-page="learn" class="tool-card">
+                                <i data-lucide="book-open" class="w-8 h-8 mb-4 text-[#1D85E1]"></i>
+                                <h3 class="text-xl font-bold mb-2">Learning Hub</h3>
+                                <p class="text-gray-400">Learn about complex financial topics in simple, easy-to-understand terms.</p>
+                            </div>
+                             <div data-page="premium" class="tool-card col-span-1 md:col-span-2 lg:col-span-1">
+                                <i data-lucide="star" class="w-8 h-8 mb-4 text-yellow-400"></i>
+                                <h3 class="text-xl font-bold mb-2">Go Premium</h3>
+                                <p class="text-gray-400">Unlock advanced AI models, unlimited usage, and more.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget Planner Page -->
+                    <div id="budget-page" class="hidden page-content max-w-4xl mx-auto">
+                        <h2 class="text-3xl font-bold gradient-text mb-6">AI Budget Planner</h2>
+                        <form id="budget-form" class="space-y-4 bg-[#111] p-6 rounded-lg">
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="font-semibold mb-2 block">Monthly Income ($)</label>
+                                    <div class="input-gradient-border rounded-md"><input type="number" name="income" placeholder="e.g., 3000" class="p-3 rounded-[5px] input-field" required></div>
+                                </div>
+                                <div>
+                                    <label class="font-semibold mb-2 block">Number of People</label>
+                                    <div class="input-gradient-border rounded-md"><input type="number" name="people" placeholder="e.g., 2" class="p-3 rounded-[5px] input-field" required min="1"></div>
+                                </div>
+                            </div>
+                             <div>
+                                <label class="font-semibold mb-2 block">Fixed Monthly Expenses ($)</label>
+                                <div class="input-gradient-border rounded-md"><textarea name="expenses" rows="4" placeholder="e.g., Rent: 1200, Utilities: 150, Car Payment: 300" class="p-3 rounded-[5px] input-field"></textarea></div>
+                            </div>
+                            <div>
+                                <label class="font-semibold mb-2 block">Savings Goal</label>
+                                <div class="input-gradient-border rounded-md"><input type="text" name="goal" placeholder="e.g., Save for a down payment, pay off credit card" class="p-3 rounded-[5px] input-field"></div>
+                            </div>
+                            <button type="submit" class="w-full p-3 rounded-md btn-primary font-semibold">Generate Budget Plan</button>
+                        </form>
+                        <div id="budget-output" class="ai-output-container mt-8 hidden"></div>
+                    </div>
+                    
+                    <!-- Goal Setter Page -->
+                    <div id="goals-page" class="hidden page-content max-w-4xl mx-auto">
+                         <h2 class="text-3xl font-bold gradient-text mb-6">AI Goal Setter</h2>
+                        <form id="goal-form" class="space-y-4 bg-[#111] p-6 rounded-lg">
+                             <div>
+                                <label class="font-semibold mb-2 block">What is your financial goal?</label>
+                                <div class="input-gradient-border rounded-md"><input type="text" name="goal_description" placeholder="e.g., Buy a new car for $25,000" class="p-3 rounded-[5px] input-field" required></div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="font-semibold mb-2 block">How much can you save per month? ($)</label>
+                                    <div class="input-gradient-border rounded-md"><input type="number" name="monthly_savings" placeholder="e.g., 500" class="p-3 rounded-[5px] input-field" required></div>
+                                </div>
+                                <div>
+                                    <label class="font-semibold mb-2 block">Do you have an initial amount saved? ($)</label>
+                                    <div class="input-gradient-border rounded-md"><input type="number" name="initial_savings" placeholder="e.g., 2000" class="p-3 rounded-[5px] input-field"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full p-3 rounded-md btn-primary font-semibold">Create Goal Plan</button>
+                        </form>
+                        <div id="goal-output" class="ai-output-container mt-8 hidden"></div>
+                    </div>
+                    
+                    <!-- Business Builder Page -->
+                    <div id="business-page" class="hidden page-content max-w-4xl mx-auto h-full flex flex-col items-center justify-center text-center">
+                        <!-- Big text display area -->
+                        <div id="business-builder-display" class="text-2xl md:text-4xl font-semibold text-gray-300 flex-grow flex items-center justify-center">
+                            <!-- AI text will be typed here -->
+                        </div>
+
+                        <!-- Input form (initially hidden) -->
+                        <form id="business-builder-form" class="mt-4 flex-shrink-0 w-full hidden">
+                            <label id="business-builder-label" for="business-builder-input" class="font-semibold mb-2 block sr-only">Your response...</label>
+                            <div class="flex items-center gap-3 max-w-lg mx-auto">
+                                <div class="input-gradient-border rounded-md flex-grow">
+                                    <input type="text" id="business-builder-input" class="w-full p-3 rounded-[5px] input-field text-center" required>
+                                </div>
+                                <button type="submit" class="p-3 rounded-md btn-primary">
+                                    <i data-lucide="send-horizontal" class="w-6 h-6"></i>
+                                </button>
+                            </div>
+                        </form>
+                        <div id="business-output" class="ai-output-container mt-8 hidden flex-grow overflow-y-auto w-full text-left"></div>
+                    </div>
+
+
+                    <!-- Learning Hub Page -->
+                    <div id="learn-page" class="hidden page-content max-w-4xl mx-auto">
+                        <h2 class="text-3xl font-bold gradient-text mb-6">Learning Hub</h2>
+                        <p class="text-gray-400 mb-6">Select a topic to get a simple, AI-powered explanation.</p>
+                        <div id="learning-topics" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="suggestion-card" data-topic="ETFs">What are ETFs?</div>
+                            <div class="suggestion-card" data-topic="401k">How does a 401(k) work?</div>
+                            <div class="suggestion-card" data-topic="Credit Score">What affects a credit score?</div>
+                            <div class="suggestion-card" data-topic="Compound Interest">Explain compound interest.</div>
+                            <div class="suggestion-card" data-topic="Roth IRA">What is a Roth IRA?</div>
+                            <div class="suggestion-card" data-topic="Mortgage">How do mortgages work?</div>
+                        </div>
+                        <div id="learn-output" class="ai-output-container mt-8 hidden"></div>
+                    </div>
+
+                    <!-- Menu Page (for mobile) -->
+                    <div id="menu-page" class="hidden page-content max-w-2xl mx-auto">
+                        <h2 class="text-3xl font-bold gradient-text mb-8">More Options</h2>
+                        <div class="space-y-4">
+                             <div data-page="budget" class="tool-card flex items-center gap-4">
+                                <i data-lucide="piggy-bank" class="w-8 h-8 text-[#1D85E1]"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Budget Planner</h3>
+                                    <p class="text-gray-400">Manage your income and expenses.</p>
+                                </div>
+                            </div>
+                            <div data-page="goals" class="tool-card flex items-center gap-4">
+                                <i data-lucide="target" class="w-8 h-8 text-[#1D85E1]"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Goal Setter</h3>
+                                    <p class="text-gray-400">Define and achieve financial goals.</p>
+                                </div>
+                            </div>
+                            <div data-page="business" class="tool-card flex items-center gap-4">
+                                <i data-lucide="briefcase" class="w-8 h-8 text-[#1D85E1]"></i>
+                                 <div>
+                                    <h3 class="text-xl font-bold">Business Builder</h3>
+                                    <p class="text-gray-400">Create a solid business plan.</p>
+                                </div>
+                            </div>
+                            <div data-page="learn" class="tool-card flex items-center gap-4">
+                                <i data-lucide="book-open" class="w-8 h-8 text-[#1D85E1]"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Learning Hub</h3>
+                                    <p class="text-gray-400">Learn about financial topics.</p>
+                                </div>
+                            </div>
+                            <div class="border-t border-[#1D85E1]/50 my-4"></div>
+                            <div data-page="premium" class="tool-card flex items-center gap-4">
+                                <i data-lucide="star" class="w-8 h-8 text-yellow-400"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Get Premium</h3>
+                                    <p class="text-gray-400">Unlock advanced features.</p>
+                                </div>
+                            </div>
+                             <div data-page="settings" class="tool-card flex items-center gap-4">
+                                <i data-lucide="settings" class="w-8 h-8 text-[#1D85E1]"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold">Settings</h3>
+                                    <p class="text-gray-400">Manage your account.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vaulty Assistant Chat Page -->
+                <div id="vaulty-page" class="hidden page-content h-full flex flex-col">
+                    <div class="flex-grow p-4 md:p-6 overflow-y-auto" id="messages-container">
+                        <!-- Messages will be injected here -->
+                    </div>
+                    <!-- Message Input Form -->
+                    <div class="p-4 border-t border-[#1D85E1]">
+                        <form id="message-form" class="flex items-center gap-3">
+                            <div class="input-gradient-border rounded-full flex-grow">
+                                <input type="text" id="message-input" placeholder="Ask Vaulty Assistant anything..." class="w-full p-3 px-5 rounded-full input-field">
+                            </div>
+                            <button type="submit" class="p-3 rounded-full btn-primary">
+                                <i data-lucide="send-horizontal" class="w-6 h-6"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Financial Manager Page -->
+                <div id="manager-page" class="hidden page-content h-full flex-col justify-center">
+                    <!-- Creation View -->
+                    <div id="manager-creation-view" class="w-full max-w-2xl mx-auto p-4 md:p-8">
+                        <h2 class="text-3xl font-bold gradient-text mb-6 text-center">Create Your Financial Manager</h2>
+                        <form id="manager-creation-form" class="space-y-4 bg-[#111] p-6 rounded-lg">
+                            <div>
+                                <label for="manager-name" class="font-semibold mb-2 block">Manager's Name</label>
+                                <div class="input-gradient-border rounded-md">
+                                    <input type="text" id="manager-name" name="name" placeholder="e.g., Alex, The Strategist" class="p-3 rounded-[5px] input-field" required>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="manager-persona" class="font-semibold mb-2 block">Manager's Specialty</label>
+                                <div class="input-gradient-border rounded-md">
+                                    <select id="manager-persona" name="persona" class="p-3 rounded-[5px] input-field" required>
+                                        <option value="saver">Strict Saver: Focuses on cutting costs and maximizing savings.</option>
+                                        <option value="investor">Investment Guru: Provides insights on market trends and investment strategies.</option>
+                                        <option value="debt-crusher">Debt Crusher: Specializes in strategies to eliminate debt quickly.</option>
+                                        <option value="business-growth">Business Growth Expert: Helps with scaling a business and managing finances.</option>
+                                        <option value="holistic">Holistic Planner: A balanced approach to all aspects of finance.</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full p-3 rounded-md btn-primary font-semibold">Create Manager</button>
+                        </form>
+                    </div>
+        
+                    <!-- Chat View (initially hidden) -->
+                    <div id="manager-chat-view" class="hidden h-full w-full flex flex-col">
+                         <div class="flex-shrink-0 flex items-center justify-between p-4 border-b border-[#1D85E1]">
+                            <div class="flex items-center gap-3">
+                                 <i id="manager-chat-icon" data-lucide="user-cog" class="w-10 h-10 p-2 bg-[#1a1a1a] rounded-full text-[#1D85E1]"></i>
+                                <div>
+                                    <h3 id="manager-chat-name" class="text-xl font-bold">Financial Manager</h3>
+                                    <p id="manager-chat-persona" class="text-sm text-gray-400">Ready to help</p>
+                                </div>
+                            </div>
+                            <button id="reset-manager-btn" class="text-sm text-gray-400 hover:text-white underline">Create New</button>
+                        </div>
+                        <div class="flex-grow p-4 md:p-6 overflow-y-auto" id="manager-messages-container">
+                            <!-- Chat messages will be here -->
+                        </div>
+                        <div class="flex-shrink-0 p-4 border-t border-[#1D85E1]">
+                            <form id="manager-message-form" class="flex items-center gap-3">
+                                <div class="input-gradient-border rounded-full flex-grow">
+                                    <input type="text" id="manager-message-input" placeholder="Ask your manager..." class="w-full p-3 px-5 rounded-full input-field">
+                                </div>
+                                <button type="submit" class="p-3 rounded-full btn-primary">
+                                    <i data-lucide="send-horizontal" class="w-6 h-6"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Premium Page -->
+                <div id="premium-page" class="hidden page-content max-w-5xl mx-auto p-4 md:p-8">
+                    <h2 class="text-4xl font-bold text-center gradient-text mb-4">Unlock Your Full Potential</h2>
+                    <p class="text-center text-gray-400 mb-12 max-w-2xl mx-auto">Choose a plan that fits your needs. Upgrade to Premium for advanced AI models, unlimited usage, and priority support.</p>
+                    <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                        <!-- Free Plan -->
+                        <div class="bg-[#1a1a1a] border border-[#333] p-8 rounded-lg w-full max-w-sm">
+                            <h3 class="text-2xl font-bold mb-4">Standard</h3>
+                            <p class="text-gray-400 mb-6">For getting started.</p>
+                            <p class="text-4xl font-bold mb-6">Free</p>
+                            <ul class="space-y-3 text-gray-300 mb-8">
+                                <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i>Standard AI model</li>
+                                <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i>Basic financial tools</li>
+                                <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-green-500"></i>Community support</li>
+                            </ul>
+                            <button class="w-full p-3 rounded-md bg-[#333] font-semibold text-white">Current Plan</button>
+                        </div>
+                        <!-- Premium Plan -->
+                        <div class="bg-[#1a1a1a] p-1 rounded-lg w-full max-w-sm animated-gradient-bg">
+                            <div class="bg-[#111] p-8 rounded-md">
+                                <h3 class="text-2xl font-bold mb-4 gradient-text">Premium</h3>
+                                <p class="text-gray-400 mb-6">For professionals and enthusiasts.</p>
+                                <p class="text-4xl font-bold mb-6">$9.99<span class="text-lg text-gray-400">/month</span></p>
+                                <ul class="space-y-3 text-gray-300 mb-8">
+                                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-[#1D85E1]"></i>Advanced AI model</li>
+                                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-[#1D85E1]"></i>All financial tools</li>
+                                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-[#1D85E1]"></i>Unlimited usage</li>
+                                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-[#1D85E1]"></i>Priority support</li>
+                                </ul>
+                                <button class="w-full p-3 rounded-md btn-primary font-semibold">Upgrade to Premium</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Page -->
+                <div id="settings-page" class="hidden page-content max-w-2xl mx-auto p-4 md:p-8">
+                    <h2 class="text-3xl font-bold gradient-text mb-8">Settings</h2>
+                    <div class="space-y-6 bg-[#111] p-6 rounded-lg">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">Account</h3>
+                            <div class="flex justify-between items-center">
+                                <p class="text-gray-400">Email</p>
+                                <p id="user-email-display" class="font-medium">loading...</p>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold mb-4">General</h3>
+                            <button id="logout-btn" class="w-full text-left p-3 rounded-md bg-red-600/20 text-red-400 hover:bg-red-600/30 font-semibold">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auth Screen -->
+        <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black">
+             <div class="w-full max-w-md p-1 rounded-lg animated-gradient-bg">
+                <div class="bg-[#111] p-8 rounded-md">
+                    <img src="/logovaultyai.png" class="w-20 h-20 mx-auto mb-4" onerror="this.onerror=null;this.src='https://placehold.co/80x80/111111/FFFFFF?text=V';">
+                    <h1 class="text-3xl font-bold text-center mb-2 gradient-text">Vaulty AI</h1>
+                    <p class="text-center text-gray-400 mb-6">Your Personal Finance Coach</p>
+                    <div id="auth-forms">
+                        <form id="login-form" class="space-y-4">
+                            <div class="input-gradient-border rounded-md"><input type="email" id="login-email" placeholder="Email" class="w-full p-3 rounded-[5px] input-field" required></div>
+                            <div class="input-gradient-border rounded-md"><input type="password" id="login-password" placeholder="Password" class="w-full p-3 rounded-[5px] input-field" required></div>
+                            <button type="submit" class="w-full p-3 rounded-md btn-primary font-semibold">Login</button>
+                            <p class="text-center text-sm text-gray-400">Don't have an account? <a href="#" id="show-register" class="gradient-text hover:brightness-125">Register</a></p>
+                        </form>
+                        <form id="register-form" class="space-y-4 hidden">
+                            <div class="input-gradient-border rounded-md"><input type="email" id="register-email" placeholder="Email" class="w-full p-3 rounded-[5px] input-field" required></div>
+                            <div class="input-gradient-border rounded-md"><input type="password" id="register-password" placeholder="Password" class="w-full p-3 rounded-[5px] input-field" required></div>
+                            <button type="submit" class="w-full p-3 rounded-md btn-primary font-semibold">Register</button>
+                            <p class="text-center text-sm text-gray-400">Already have an account? <a href="#" id="show-login" class="gradient-text hover:brightness-125">Login</a></p>
+                        </form>
+                    </div>
+                     <p id="auth-error" class="text-red-500 text-sm mt-4 text-center"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <div id="mobile-nav" class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0a0a0a] border-t border-[#1D85E1] flex justify-around items-center p-2 z-30">
+        <button data-page="dashboard" class="mobile-nav-btn flex flex-col items-center text-xs p-1 w-1/4"><i data-lucide="layout-dashboard" class="w-6 h-6 mb-1 text-[#1D85E1]"></i><span>Dashboard</span></button>
+        <button data-page="vaulty" class="mobile-nav-btn flex flex-col items-center text-xs p-1 w-1/4 text-gray-400"><img src="/logovaultyai.png" class="w-6 h-6 mb-1 rounded-full"><span class="gradient-text font-bold">Vaulty</span></button>
+        <button data-page="manager" class="mobile-nav-btn flex flex-col items-center text-xs p-1 w-1/4 text-gray-400"><i data-lucide="user-cog" class="w-6 h-6 mb-1 text-[#1D85E1]"></i><span>Manager</span></button>
+        <button data-page="menu" class="mobile-nav-btn flex flex-col items-center text-xs p-1 w-1/4 text-gray-400"><i data-lucide="menu" class="w-6 h-6 mb-1 text-[#1D85E1]"></i><span>More</span></button>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container"></div>
+
+    <script type="module">
+        // Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, Timestamp, collection, addDoc, getDocs, deleteDoc, query } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBD202YQyRGa7PUE9kh8o-bQQciAO8Lwc8",
+            authDomain: "glowearth-f0801.firebaseapp.com",
+            projectId: "glowearth-f0801",
+            storageBucket: "glowearth-f0801.appspot.com",
+            messagingSenderId: "11001317302",
+            appId: "1:11001317302:web:db00d5dd1cf0fabf862317",
+            measurementId: "G-X992GXP4P7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        let currentUser = null;
+        let vaultyChatHistory = [];
+        let financialManager = null;
+        let managerChatHistory = [];
+
+        // --- Notification System ---
+        const showNotification = (message) => {
+            const container = document.getElementById('notification-container');
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.textContent = message;
+            container.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        };
+
+        // --- DOM Elements ---
+        const authScreen = document.getElementById('auth-screen');
+        const mainApp = document.getElementById('main-app');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const showRegister = document.getElementById('show-register');
+        const showLogin = document.getElementById('show-login');
+        const authError = document.getElementById('auth-error');
+        const budgetForm = document.getElementById('budget-form');
+        const budgetOutput = document.getElementById('budget-output');
+        const goalForm = document.getElementById('goal-form');
+        const goalOutput = document.getElementById('goal-output');
+        
+        const businessOutput = document.getElementById('business-output');
+        const businessBuilderDisplay = document.getElementById('business-builder-display');
+        const businessBuilderForm = document.getElementById('business-builder-form');
+        const businessBuilderInput = document.getElementById('business-builder-input');
+        
+        const learningTopics = document.getElementById('learning-topics');
+        const learnOutput = document.getElementById('learn-output');
+        const sidebarPanel = document.getElementById('sidebar-panel');
+        const hideSidebarBtn = document.getElementById('hide-sidebar-btn');
+        const showSidebarBtn = document.getElementById('show-sidebar-btn');
+        const mainContent = document.getElementById('main-content');
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const messagesContainer = document.getElementById('messages-container');
+        const userEmailDisplay = document.getElementById('user-email-display');
+        const logoutBtn = document.getElementById('logout-btn');
+        
+        // Financial Manager Elements
+        const managerCreationForm = document.getElementById('manager-creation-form');
+        const managerChatView = document.getElementById('manager-chat-view');
+        const managerCreationView = document.getElementById('manager-creation-view');
+        const managerChatName = document.getElementById('manager-chat-name');
+        const managerChatPersona = document.getElementById('manager-chat-persona');
+        const resetManagerBtn = document.getElementById('reset-manager-btn');
+        const managerMessagesContainer = document.getElementById('manager-messages-container');
+        const managerMessageForm = document.getElementById('manager-message-form');
+        const managerMessageInput = document.getElementById('manager-message-input');
+
+        // --- State Management ---
+        let businessBuilderState = { step: 0, history: [], isWaiting: false };
+
+        // --- Initialization ---
+        const initialize = () => {
+            const setAppHeight = () => document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+            window.addEventListener('resize', setAppHeight);
+            setAppHeight();
+            lucide.createIcons();
+            setupEventListeners();
+            onAuthStateChanged(auth, async user => {
+                if (user) {
+                    currentUser = user;
+                    await loadFinancialManager(user.uid);
+                    authScreen.classList.add('hidden');
+                    mainApp.classList.remove('hidden');
+                    if (userEmailDisplay) userEmailDisplay.textContent = user.email;
+                    handleHashChange();
+                } else {
+                    currentUser = null;
+                    authScreen.classList.remove('hidden');
+                    mainApp.classList.add('hidden');
+                }
+            });
+        };
+
+        // --- Event Listeners ---
+        const setupEventListeners = () => {
+            showRegister.addEventListener('click', (e) => { e.preventDefault(); loginForm.classList.add('hidden'); registerForm.classList.remove('hidden'); });
+            showLogin.addEventListener('click', (e) => { e.preventDefault(); registerForm.classList.add('hidden'); loginForm.classList.remove('hidden'); });
+            loginForm.addEventListener('submit', handleLogin);
+            registerForm.addEventListener('submit', handleRegister);
+            window.addEventListener('hashchange', handleHashChange);
+            logoutBtn.addEventListener('click', () => auth.signOut());
+
+            // Disable saving, right-click, and dev tools
+            document.addEventListener('contextmenu', e => {
+                e.preventDefault();
+                showNotification('This action has been disabled.');
+            });
+            document.addEventListener('keydown', e => {
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || (e.ctrlKey && e.key === 'U') || (e.ctrlKey && e.key === 'S')) {
+                    e.preventDefault();
+                    showNotification('This action has been disabled.');
+                }
+            });
+
+            // Navigation clicks
+            document.querySelectorAll('.mobile-nav-btn, .desktop-nav-btn, .tool-card').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const page = btn.dataset.page;
+                    if (page) window.location.hash = '#/' + page;
+                });
+            });
+
+            // Tool form submissions
+            budgetForm.addEventListener('submit', handleBudgetSubmit);
+            goalForm.addEventListener('submit', handleGoalSubmit);
+            businessBuilderForm.addEventListener('submit', handleBusinessBuilderSubmit);
+            messageForm.addEventListener('submit', handleSendMessage);
+            managerCreationForm.addEventListener('submit', handleManagerCreation);
+            managerMessageForm.addEventListener('submit', handleManagerMessage);
+            resetManagerBtn.addEventListener('click', resetManager);
+            
+            // Learning hub topic clicks
+            learningTopics.addEventListener('click', (e) => {
+                const card = e.target.closest('.suggestion-card');
+                if (card && card.dataset.topic) {
+                    handleLearningTopic(card.dataset.topic);
+                }
+            });
+
+            // Sidebar visibility
+            hideSidebarBtn.addEventListener('click', () => {
+                sidebarPanel.classList.add('md:hidden');
+                showSidebarBtn.classList.remove('hidden');
+                mainContent.classList.remove('md:w-3/4');
+                mainContent.classList.add('w-full');
+            });
+            showSidebarBtn.addEventListener('click', () => {
+                sidebarPanel.classList.remove('md:hidden');
+                showSidebarBtn.classList.add('hidden');
+                 mainContent.classList.add('md:w-3/4');
+                mainContent.classList.remove('w-full');
+            });
+        };
+
+        // --- Authentication ---
+        const handleLogin = (e) => { e.preventDefault(); signInWithEmailAndPassword(auth, loginForm['login-email'].value, loginForm['login-password'].value).catch(error => authError.textContent = error.message); };
+        const handleRegister = (e) => { e.preventDefault(); createUserWithEmailAndPassword(auth, registerForm['register-email'].value, registerForm['register-password'].value).catch(error => authError.textContent = error.message); };
+        
+        // --- Navigation & Page Handling ---
+        const handleHashChange = () => {
+            const hash = window.location.hash || '#/dashboard';
+            const pageId = hash.substring(2) || 'dashboard'; // Default to dashboard
+            showPage(pageId);
+        };
+        
+        const showPage = (pageId) => {
+            document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
+            
+            // Handle page container visibility vs vaulty page
+            const pageContainer = document.getElementById('page-container');
+            const vaultyPage = document.getElementById('vaulty-page');
+            const managerPage = document.getElementById('manager-page');
+            
+            if (pageId === 'vaulty') {
+                pageContainer.classList.add('hidden');
+                managerPage.classList.add('hidden');
+                vaultyPage.classList.remove('hidden');
+                vaultyPage.classList.add('flex');
+            } else if (pageId === 'manager') {
+                pageContainer.classList.add('hidden');
+                vaultyPage.classList.add('hidden');
+                managerPage.classList.remove('hidden');
+                managerPage.classList.add('flex');
+
+                if (financialManager) {
+                    managerCreationView.classList.add('hidden');
+                    managerChatView.classList.remove('hidden');
+                    managerChatView.classList.add('flex');
+                } else {
+                    managerCreationView.classList.remove('hidden');
+                    managerChatView.classList.add('hidden');
+                    managerChatView.classList.remove('flex');
+                }
+            } else {
+                pageContainer.classList.remove('hidden');
+                vaultyPage.classList.add('hidden');
+                managerPage.classList.add('hidden');
+                managerPage.classList.remove('flex');
+
+                const pageToShow = document.getElementById(`${pageId}-page`);
+                if (pageToShow) {
+                    pageToShow.classList.remove('hidden');
+                    if (pageId === 'business') {
+                        resetBusinessBuilder();
+                    }
+                } else {
+                    document.getElementById('dashboard-page').classList.remove('hidden'); // Fallback
+                }
+            }
+
+
+            // Update active state for navigation
+            const pageName = (pageId.charAt(0).toUpperCase() + pageId.slice(1)).replace('-', ' ');
+            document.getElementById('page-title').textContent = pageName === 'Menu' ? 'More Options' : pageName;
+            
+            const moreMenuPages = ['budget', 'goals', 'business', 'learn', 'premium', 'settings'];
+
+            // Update active state for DESKTOP navigation
+            document.querySelectorAll('.desktop-nav-btn').forEach(btn => {
+                if (btn.dataset.page === pageId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update active state for MOBILE navigation
+            let activeMobilePage = pageId;
+            if (moreMenuPages.includes(pageId)) {
+                activeMobilePage = 'menu';
+            }
+            document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+                if (btn.dataset.page === activeMobilePage) {
+                    btn.classList.add('active');
+                    btn.classList.remove('text-gray-400');
+                } else {
+                    btn.classList.remove('active');
+                    btn.classList.add('text-gray-400');
+                }
+            });
+        };
+
+        // --- Network Helper with Retry Logic ---
+        async function fetchWithRetry(url, options, maxRetries = 5) {
+            let delay = 1000; // start with 1 second
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    // Only retry on 503 Service Unavailable
+                    if (response.status === 503 && i < maxRetries - 1) {
+                        console.warn(`Service unavailable (503). Retrying in ${delay / 1000}s... (Attempt ${i + 1})`);
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2; // Exponential backoff
+                        continue; // Go to the next iteration of the loop
+                    }
+                    return response; // Return the response if it's not 503 or if it's the last retry
+                } catch (error) {
+                    // This catches network errors (e.g., user is offline)
+                    if (i < maxRetries - 1) {
+                        console.warn(`Network error. Retrying in ${delay / 1000}s... (Attempt ${i + 1})`);
+                        await new Promise(res => setTimeout(res, delay));
+                        delay *= 2;
+                    } else {
+                        throw error; // Rethrow the error on the last attempt
+                    }
+                }
+            }
+        }
+        
+        // --- AI Tool Handlers ---
+        const handleBudgetSubmit = (e) => {
+            e.preventDefault();
+            const formData = new FormData(budgetForm);
+            const prompt = `You are a financial advisor. Create a simple, actionable monthly budget plan for a household of ${formData.get('people')} with a monthly income of $${formData.get('income')}. Their fixed expenses are: ${formData.get('expenses')}. Their main savings goal is: "${formData.get('goal')}". Structure the response with clear headings like "Income", "Fixed Expenses", "Variable Spending (with suggested categories like Groceries, Entertainment, etc.)", and "Savings". Provide a brief summary with tips at the end.`;
+            generateAiResponse(prompt, budgetOutput);
+        };
+
+        const handleGoalSubmit = (e) => {
+            e.preventDefault();
+            const formData = new FormData(goalForm);
+            const prompt = `You are a financial planner. A user wants to achieve the following goal: "${formData.get('goal_description')}". They can save $${formData.get('monthly_savings')} per month and have an initial savings of $${formData.get('initial_savings')}. Create a step-by-step plan for them. Calculate the timeline to reach the goal. Provide motivational tips and suggest ways they might be able to reach the goal faster.`;
+            generateAiResponse(prompt, goalOutput);
+        };
+
+        const handleLearningTopic = (topic) => {
+            const prompt = `You are an expert educator who simplifies complex topics. Explain "${topic}" in a clear, simple, and easy-to-understand way, suitable for a complete beginner. Use analogies if possible.`;
+            generateAiResponse(prompt, learnOutput);
+        };
+        
+        let planTypingTimeout; // To control the business plan typing animation
+
+        const generateAndTypeAiResponse = async (prompt, outputElement) => {
+            outputElement.classList.remove('hidden');
+            outputElement.innerHTML = ''; // Clear previous content
+
+            const textDisplay = document.createElement('div');
+            const skipContainer = document.createElement('div');
+            skipContainer.className = 'mt-2 text-center';
+            
+            outputElement.appendChild(textDisplay);
+            outputElement.appendChild(skipContainer);
+            
+            textDisplay.innerHTML = '<div class="blinking-cursor"></div>'; // Show loading indicator
+            outputElement.scrollIntoView({ behavior: 'smooth' });
+
+            const apiKey = "AIzaSyAVsgP4wvcrkhZchKlv3-5WJEqGW_i-fmU";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+            try {
+                const response = await fetchWithRetry(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text;
+
+                // --- Typing Logic ---
+                let i = 0;
+                textDisplay.textContent = ''; // Use textContent for typing to avoid HTML parsing issues
+                
+                const skipButton = document.createElement('button');
+                skipButton.textContent = 'Skip Animation';
+                skipButton.className = 'text-sm text-gray-400 hover:text-white underline';
+
+                const completeTyping = () => {
+                    clearTimeout(planTypingTimeout);
+                    textDisplay.innerHTML = parseMarkdownSimple(aiText); // Parse final HTML
+                    if (skipContainer) skipContainer.innerHTML = '';
+                    outputElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+                };
+
+                skipButton.addEventListener('click', completeTyping);
+                skipContainer.appendChild(skipButton);
+
+                function type() {
+                    if (i < aiText.length) {
+                        textDisplay.textContent += aiText.charAt(i);
+                        i++;
+                        planTypingTimeout = setTimeout(type, 15); // Adjust typing speed
+                        outputElement.scrollTop = outputElement.scrollHeight; // Auto-scroll
+                    } else {
+                       completeTyping();
+                    }
+                }
+                type();
+
+            } catch (error) {
+                console.error("AI Generation Error:", error);
+                textDisplay.textContent = "Sorry, something went wrong. Please try again.";
+                skipContainer.innerHTML = '';
+            }
+        };
+
+        // --- Business Builder ---
+        const businessBuilderSteps = [
+            { question: "Great start! Now, who is your target audience? Be as specific as possible.", placeholder: "e.g., Young professionals aged 25-40 who work from home...", key: "idea" },
+            { question: "Excellent. What makes your business unique? What is your unique selling proposition (USP)?", placeholder: "e.g., We are the only service focusing on rare, single-origin beans...", key: "audience" },
+            { question: "That's a strong differentiator. How do you plan to make money? What is your primary monetization strategy?", placeholder: "e.g., A tiered monthly subscription model...", key: "usp" },
+            { question: "Perfect! I have all the information I need. I will now generate your complete business plan. Please wait a moment.", key: "monetization" }
+        ];
+
+        function typeWriter(element, text, onComplete) {
+            let i = 0;
+            element.innerHTML = '';
+            businessBuilderForm.classList.add('hidden'); // Hide form while typing
+
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, 40); // Typing speed
+                } else {
+                    if(element.innerHTML) element.innerHTML += '<span class="blinking-cursor-large"></span>';
+                    if (onComplete) {
+                        onComplete();
+                    }
+                }
+            }
+            type();
+        }
+
+        function resetBusinessBuilder() {
+            businessBuilderState = { step: 0, history: [], isWaiting: false };
+            businessBuilderInput.value = '';
+            businessBuilderForm.classList.add('hidden');
+            businessBuilderForm.querySelector('button').disabled = false;
+            
+            businessOutput.classList.add('hidden');
+            businessOutput.innerHTML = '';
+            businessBuilderDisplay.classList.remove('hidden');
+
+            const welcomeText = "Welcome! I'm your business builder. Before we start, please tell me a little bit about your business...";
+            
+            typeWriter(businessBuilderDisplay, welcomeText, () => {
+                 businessBuilderForm.classList.remove('hidden');
+                 businessBuilderInput.placeholder = "e.g., An online coffee subscription service...";
+                 businessBuilderInput.focus();
+            });
+        }
+
+        async function handleBusinessBuilderSubmit(e) {
+            e.preventDefault();
+            if (businessBuilderState.isWaiting) return;
+            const userInput = businessBuilderInput.value.trim();
+            if (!userInput) return;
+
+            // Hide form and disable while processing
+            businessBuilderForm.classList.add('hidden');
+            businessBuilderState.isWaiting = true;
+            businessBuilderInput.value = '';
+
+            const currentStepInfo = businessBuilderSteps[businessBuilderState.step];
+            businessBuilderState.history.push({ role: 'user', parts: [{ text: `My answer for '${currentStepInfo.key}' is: ${userInput}` }] });
+
+            // businessBuilderDisplay.innerHTML = '<div class="blinking-cursor"></div>'; // Loading state - REMOVED
+
+            setTimeout(async () => { // Simulate thought
+                if (businessBuilderState.step < businessBuilderSteps.length - 1) {
+                    businessBuilderState.step++;
+                    const nextStep = businessBuilderSteps[businessBuilderState.step - 1];
+                    businessBuilderState.history.push({ role: 'model', parts: [{ text: nextStep.question }] });
+
+                    // Type the next question
+                    typeWriter(businessBuilderDisplay, nextStep.question, () => {
+                        businessBuilderForm.classList.remove('hidden');
+                        businessBuilderInput.placeholder = businessBuilderSteps[businessBuilderState.step].placeholder;
+                        businessBuilderInput.focus();
+                        businessBuilderState.isWaiting = false;
+                    });
+                } else {
+                    // Final step
+                    const finalPromptMsg = businessBuilderSteps[businessBuilderSteps.length - 1].question;
+
+                    typeWriter(businessBuilderDisplay, finalPromptMsg, async () => {
+                        // After typing "Please wait...", hide the main display and show the output container
+                        businessBuilderDisplay.classList.add('hidden');
+                        const finalPrompt = `Based on our conversation, create a comprehensive business plan. Format it professionally with Markdown (headings, subheadings, bullet points). The conversation history is: \n\n ${JSON.stringify(businessBuilderState.history)} \n\nThe plan must include: Executive Summary, Company Description, Market Analysis, Products & Services, Marketing & Sales, Monetization, and Actionable Next Steps.`;
+                        
+                        await generateAndTypeAiResponse(finalPrompt, businessOutput);
+                    });
+                }
+            }, 500);
+        }
+
+        // --- Financial Manager (with Firestore Persistence) ---
+        const loadFinancialManager = async (userId) => {
+            const managerDocRef = doc(db, 'users', userId, 'manager', 'profile');
+            const docSnap = await getDoc(managerDocRef);
+
+            if (docSnap.exists()) {
+                financialManager = docSnap.data();
+                
+                // Load chat history
+                managerChatHistory = [];
+                managerMessagesContainer.innerHTML = '';
+                const chatQuery = query(collection(managerDocRef, 'chatHistory'));
+                const querySnapshot = await getDocs(chatQuery);
+                const messages = [];
+                querySnapshot.forEach((doc) => {
+                    messages.push(doc.data());
+                });
+
+                // Sort messages by timestamp client-side
+                messages.sort((a, b) => a.timestamp.toMillis() - b.timestamp.toMillis());
+                
+                messages.forEach(msg => {
+                    managerChatHistory.push({ role: msg.role, parts: [{ text: msg.text }] });
+                    addChatMessageToUI(msg.text, msg.role, managerMessagesContainer);
+                });
+
+                // Update UI elements in chat header
+                managerChatName.textContent = financialManager.name;
+                const personaText = managerCreationForm.querySelector(`option[value="${financialManager.persona}"]`).textContent.split(':')[0];
+                managerChatPersona.textContent = personaText;
+
+            } else {
+                // No manager saved, reset state
+                financialManager = null;
+                managerChatHistory = [];
+            }
+        };
+
+        const handleManagerCreation = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(managerCreationForm);
+            const name = formData.get('name');
+            const persona = formData.get('persona');
+
+            financialManager = { name, persona };
+            managerChatHistory = [];
+
+            // Save manager profile to Firestore
+            const managerDocRef = doc(db, 'users', currentUser.uid, 'manager', 'profile');
+            await setDoc(managerDocRef, financialManager);
+
+            managerChatName.textContent = name;
+            const personaText = managerCreationForm.querySelector(`option[value="${persona}"]`).textContent.split(':')[0];
+            managerChatPersona.textContent = personaText;
+
+            // Switch to chat view
+            managerCreationView.classList.add('hidden');
+            managerChatView.classList.remove('hidden');
+            managerChatView.classList.add('flex');
+            
+            lucide.createIcons(); 
+
+            const welcomeMessage = `Hello! I'm ${name}, your new ${personaText}. How can I help you with your finances today?`;
+            
+            // This welcome message doesn't need typing, but we show it
+            addChatMessageToUI(welcomeMessage, 'ai', managerMessagesContainer);
+            managerChatHistory.push({ role: 'model', parts: [{ text: welcomeMessage }] });
+
+            // Save welcome message to Firestore chat history
+            const chatCollectionRef = collection(managerDocRef, 'chatHistory');
+            await addDoc(chatCollectionRef, {
+                role: 'model',
+                text: welcomeMessage,
+                timestamp: Timestamp.now()
+            });
+        };
+
+        const handleManagerMessage = async (e) => {
+            e.preventDefault();
+            const text = managerMessageInput.value.trim();
+            if (!text || !financialManager) return;
+            
+            const userText = text; 
+            managerMessageInput.value = '';
+            addChatMessageToUI(userText, 'user', managerMessagesContainer);
+            managerChatHistory.push({ role: 'user', parts: [{ text: userText }] });
+            
+            const managerDocRef = doc(db, 'users', currentUser.uid, 'manager', 'profile');
+            const chatCollectionRef = collection(managerDocRef, 'chatHistory');
+            await addDoc(chatCollectionRef, { role: 'user', text: userText, timestamp: Timestamp.now() });
+
+            const thinkingBubbleWrapper = addChatMessageToUI('...', 'ai', managerMessagesContainer, true);
+
+            const personas = {
+                'saver': 'You are a strict financial manager who is an expert in saving money, cutting costs, and frugal living. You give direct, no-nonsense advice.',
+                'investor': 'You are a savvy investment guru. You are knowledgeable about stocks, bonds, ETFs, real estate, and crypto. You explain complex investment topics simply.',
+                'debt-crusher': 'You are a motivational debt-crushing specialist. You create aggressive, yet realistic, plans to help users eliminate their debt fast.',
+                'business-growth': 'You are a business finance expert, specializing in helping small businesses and entrepreneurs manage cash flow, find funding, and scale sustainably.',
+                'holistic': 'You are a holistic financial planner, providing a balanced, calm, and comprehensive approach to personal finance, covering everything from daily budgeting to long-term retirement planning.'
+            };
+            const systemPrompt = `You are an AI Financial Manager named ${financialManager.name}. Your specialty is: ${personas[financialManager.persona]}. Always stay in character. Be helpful, encouraging, and provide actionable financial advice based on your persona. Use simple Markdown for formatting.`;
+            const aiResponse = await generateChatResponse(systemPrompt, managerChatHistory);
+            
+            thinkingBubbleWrapper.remove(); 
+            
+            const newAiBubbleWrapper = addChatMessageToUI('', 'ai', managerMessagesContainer);
+            const newAiBubble = newAiBubbleWrapper.querySelector('.message-bubble');
+            typeChatMessageInBubble(newAiBubble, aiResponse);
+            
+            managerChatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+            await addDoc(chatCollectionRef, { role: 'model', text: aiResponse, timestamp: Timestamp.now() });
+        };
+
+        const resetManager = async () => {
+            if (currentUser) {
+                const managerDocRef = doc(db, 'users', currentUser.uid, 'manager', 'profile');
+                const chatCollectionRef = collection(managerDocRef, 'chatHistory');
+
+                const chatSnapshot = await getDocs(chatCollectionRef);
+                const deletePromises = chatSnapshot.docs.map(d => deleteDoc(d.ref));
+                await Promise.all(deletePromises);
+
+                await deleteDoc(managerDocRef);
+            }
+            
+            financialManager = null;
+            managerChatHistory = [];
+            managerMessagesContainer.innerHTML = '';
+            managerCreationView.classList.remove('hidden');
+            managerChatView.classList.add('hidden');
+            managerChatView.classList.remove('flex');
+            managerCreationForm.reset();
+        };
+
+        // --- Vaulty Assistant Chat ---
+        const handleSendMessage = async (e) => {
+            e.preventDefault();
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const userText = text;
+            messageInput.value = '';
+            addChatMessageToUI(userText, 'user', messagesContainer);
+            vaultyChatHistory.push({ role: 'user', parts: [{ text: userText }] });
+
+            const thinkingBubbleWrapper = addChatMessageToUI('...', 'ai', messagesContainer, true);
+
+            const prompt = `You are Vaulty, the official AI assistant for the Vaulty AI application, a platform focused on financial coaching and tools. You are helpful, friendly, and knowledgeable. Your primary goal is to assist the user with their queries. If the query is finance-related, provide helpful information. If it's a general question, answer it to the best of your ability. Always be encouraging and polite. Use simple Markdown for formatting.`;
+            
+            const aiResponse = await generateChatResponse(prompt, vaultyChatHistory);
+            
+            thinkingBubbleWrapper.remove();
+            
+            const newAiBubbleWrapper = addChatMessageToUI('', 'ai', messagesContainer);
+            const newAiBubble = newAiBubbleWrapper.querySelector('.message-bubble');
+            typeChatMessageInBubble(newAiBubble, aiResponse);
+
+            vaultyChatHistory.push({ role: 'model', parts: [{ text: aiResponse }] });
+        };
+
+        const addChatMessageToUI = (text, sender, container, isThinking = false) => {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.className = `flex mb-4 ${sender === 'user' ? 'justify-end user-message' : 'justify-start ai-message'}`;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-bubble`;
+
+            if (isThinking) {
+                messageDiv.innerHTML = '<div class="blinking-cursor"></div>';
+            } else {
+                messageDiv.innerHTML = parseMarkdownSimple(text);
+            }
+            
+            messageWrapper.appendChild(messageDiv);
+            container.appendChild(messageWrapper);
+            container.scrollTop = container.scrollHeight;
+            return messageWrapper; // Return the entire wrapper
+        };
+
+        function typeChatMessageInBubble(bubbleElement, text) {
+            let i = 0;
+            bubbleElement.innerHTML = ''; 
+            const typingSpeed = 20;
+
+            function type() {
+                if (i < text.length) {
+                    bubbleElement.innerHTML = parseMarkdownSimple(text.substring(0, i + 1)) + '<span class="blinking-cursor"></span>';
+                    i++;
+                    const container = bubbleElement.closest('.overflow-y-auto');
+                    if (container) container.scrollTop = container.scrollHeight;
+                    setTimeout(type, typingSpeed);
+                } else {
+                    bubbleElement.innerHTML = parseMarkdownSimple(text);
+                }
+            }
+            type();
+        }
+
+        const generateChatResponse = async (systemPrompt, history) => {
+            const apiKey = "AIzaSyAVsgP4wvcrkhZchKlv3-5WJEqGW_i-fmU";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: history,
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                const data = await response.json();
+                return data.candidates[0].content.parts[0].text;
+            } catch (error) {
+                console.error("Chat Response Error:", error);
+                return "I'm sorry, I encountered an error. Please try again.";
+            }
+        };
+
+        // --- Generic AI Response Generation ---
+        const parseMarkdownSimple = (text) => {
+             return text
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^- (.*$)/gim, '<ul><li>$1</li></ul>') // Basic list
+                .replace(/\n/g, '<br>');
+        };
+
+        const generateAiResponse = async (prompt, outputElement) => {
+            outputElement.classList.remove('hidden');
+            outputElement.innerHTML = '<div class="blinking-cursor"></div>';
+            
+            const apiKey = "AIzaSyAVsgP4wvcrkhZchKlv3-5WJEqGW_i-fmU";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }] };
+
+            try {
+                const response = await fetchWithRetry(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`API error: ${response.status}`);
+                const data = await response.json();
+                const aiText = data.candidates[0].content.parts[0].text;
+                
+                outputElement.innerHTML = parseMarkdownSimple(aiText);
+                outputElement.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error("AI Generation Error:", error);
+                outputElement.textContent = "Sorry, something went wrong. Please try again.";
+            }
+        };
+
+        // --- Run App ---
+        initialize();
+    </script>
+</body>
+</html>
+
+
