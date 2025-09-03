@@ -494,6 +494,20 @@
 
                 <!-- Vaulty Assistant Chat Page -->
                 <div id="vaulty-page" class="hidden page-content h-full flex flex-col">
+                    <!-- New Header for Vaulty Chat -->
+                    <div class="flex-shrink-0 flex items-center justify-between p-4 border-b border-[#1D85E1]">
+                        <button data-page="dashboard" class="tool-card p-2 -ml-2 rounded-full hover:bg-[#1a1a1a]">
+                            <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                        </button>
+                        <div class="flex items-center gap-3">
+                            <img src="/logovaultyai.png" class="w-10 h-10 rounded-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/40x40/000000/FFFFFF?text=V';">
+                            <div>
+                                <h3 class="text-xl font-bold">Vaulty Assistant</h3>
+                                <p class="text-sm text-gray-400">Online</p>
+                            </div>
+                        </div>
+                        <div class="w-10"></div> <!-- Spacer -->
+                    </div>
                     <div class="flex-grow p-4 md:p-6 overflow-y-auto" id="messages-container">
                         <!-- Messages will be injected here -->
                     </div>
@@ -541,6 +555,9 @@
                     <!-- Chat View (initially hidden) -->
                     <div id="manager-chat-view" class="hidden h-full w-full flex flex-col">
                          <div class="flex-shrink-0 flex items-center justify-between p-4 border-b border-[#1D85E1]">
+                            <button data-page="dashboard" class="tool-card p-2 -ml-2 rounded-full hover:bg-[#1a1a1a]">
+                                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                            </button>
                             <div class="flex items-center gap-3">
                                  <i id="manager-chat-icon" data-lucide="user-cog" class="w-10 h-10 p-2 bg-[#1a1a1a] rounded-full text-[#1D85E1]"></i>
                                 <div>
@@ -548,7 +565,7 @@
                                     <p id="manager-chat-persona" class="text-sm text-gray-400">Ready to help</p>
                                 </div>
                             </div>
-                            <button id="reset-manager-btn" class="text-sm text-gray-400 hover:text-white underline">Create New</button>
+                            <button id="reset-manager-btn" class="text-sm text-gray-400 hover:text-white underline px-2">New</button>
                         </div>
                         <div class="flex-grow p-4 md:p-6 overflow-y-auto" id="manager-messages-container">
                             <!-- Chat messages will be here -->
@@ -870,16 +887,18 @@
         const showPage = (pageId) => {
             document.querySelectorAll('.page-content').forEach(p => p.classList.add('hidden'));
             
-            // Handle page container visibility vs vaulty page
             const pageContainer = document.getElementById('page-container');
             const vaultyPage = document.getElementById('vaulty-page');
             const managerPage = document.getElementById('manager-page');
+            const pageHeader = document.getElementById('page-header'); 
 
-            // Hide/Show mobile nav based on page
+            // Hide/Show mobile nav AND page header based on page
             if (pageId === 'vaulty' || pageId === 'manager') {
                 mobileNav.classList.add('hidden');
+                pageHeader.classList.add('hidden'); 
             } else {
                 mobileNav.classList.remove('hidden');
+                pageHeader.classList.remove('hidden');
             }
             
             if (pageId === 'vaulty') {
